@@ -1,0 +1,12 @@
+@import 'styles/variables';
+
+.container {
+  background-color: red;
+}
+
+// responsive
+@media (max-width: $breakpoint_tablet_max) {
+  .container {
+    background-color: yellow;
+  }
+}
