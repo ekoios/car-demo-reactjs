@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Car from 'components/Car';
-import { carApi, ICar } from 'services/car';
+import { carApi, CarProperties, ICar } from 'services/car';
 import CustomSelect from 'components/Select';
 import './styles.scss';
 
@@ -18,9 +18,9 @@ function Home() {
     const getCarOptions = async () => {
       try {
         const [carTypesData, carModelsData, carColorsData] = await Promise.all([
-          carApi.getCarOptions('type'),
-          carApi.getCarOptions('model'),
-          carApi.getCarOptions('color'),
+          carApi.getCarOptions(CarProperties.TYPE),
+          carApi.getCarOptions(CarProperties.MODEL),
+          carApi.getCarOptions(CarProperties.COLOR),
         ]);
         setCarTypes(carTypesData);
         setCarModels(carModelsData);
@@ -51,27 +51,22 @@ function Home() {
     <div className="layout">
       <h2>Cars Store</h2>
       <form className="form">
-        {carTypes.length && (
-          <CustomSelect label="Type" id="carType" value={type} onChange={onChangeSelect(setType)} options={carTypes} />
-        )}
-        {carModels.length && (
-          <CustomSelect
-            label="Model"
-            id="carModel"
-            value={model}
-            onChange={onChangeSelect(setModel)}
-            options={carModels}
-          />
-        )}
-        {carColors.length && (
-          <CustomSelect
-            label="Color"
-            id="carColor"
-            value={color}
-            onChange={onChangeSelect(setColor)}
-            options={carColors}
-          />
-        )}
+        <CustomSelect label="Type" id="carType" value={type} onChange={onChangeSelect(setType)} options={carTypes} />
+        <CustomSelect
+          label="Model"
+          id="carModel"
+          value={model}
+          onChange={onChangeSelect(setModel)}
+          options={carModels}
+        />
+
+        <CustomSelect
+          label="Color"
+          id="carColor"
+          value={color}
+          onChange={onChangeSelect(setColor)}
+          options={carColors}
+        />
       </form>
       {!!carsData.length && (
         <div className="container">

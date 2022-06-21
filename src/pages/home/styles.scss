@@ -15,6 +15,13 @@
     padding: 12px;
   }
 }
+.custom-select {
+  margin-bottom: 12px;
+  &__label {
+    display: inline-block;
+    width: 80px;
+  }
+}
 
 // responsive
 @media (max-width: $breakpoint_tablet_max) {

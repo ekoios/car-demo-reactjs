@@ -7,8 +7,14 @@ export interface ICar {
   model_year: number;
 }
 
+export enum CarProperties {
+  TYPE = 'type',
+  MODEL = 'model',
+  COLOR = 'color',
+}
+
 export const carApi = {
-  getCarOptions(key: 'type' | 'model' | 'color'): Promise<string[]> {
+  getCarOptions(key: CarProperties): Promise<string[]> {
     const typesArr = cars.map((car) => car[key]);
     const typesArrDistinct = Array.from(new Set(typesArr));
     return new Promise((resolve, reject) => {
