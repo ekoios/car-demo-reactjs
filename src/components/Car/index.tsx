@@ -3,7 +3,7 @@ import { ICar } from 'services/car';
 
 const Car: FC<ICar> = ({ type, model, color, model_year }) => {
   return (
-    <div style={{ border: '1px solid black' }}>
+    <div className="car">
       <p>
         Type: <b>{type}</b>
       </p>

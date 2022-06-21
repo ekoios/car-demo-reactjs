@@ -1,6 +1,8 @@
-import Car from 'components/Car';
 import React, { useEffect, useState } from 'react';
-import { ICar, carApi } from 'services/car';
+import Car from 'components/Car';
+import { carApi, ICar } from 'services/car';
+import CustomSelect from 'components/Select';
+import './styles.scss';
 
 function Home() {
   const [carTypes, setCarTypes] = useState<string[]>([]);
@@ -14,22 +16,30 @@ function Home() {
   const [carsData, setCarsData] = useState<ICar[]>([]);
   useEffect(() => {
     const getCarOptions = async () => {
-      const [carTypesData, carModelsData, carColorsData] = await Promise.all([
-        carApi.getCarOptions('type'),
-        carApi.getCarOptions('model'),
-        carApi.getCarOptions('color'),
-      ]);
-      setCarTypes(carTypesData);
-      setCarModels(carModelsData);
-      setCarColors(carColorsData);
+      try {
+        const [carTypesData, carModelsData, carColorsData] = await Promise.all([
+          carApi.getCarOptions('type'),
+          carApi.getCarOptions('model'),
+          carApi.getCarOptions('color'),
+        ]);
+        setCarTypes(carTypesData);
+        setCarModels(carModelsData);
+        setCarColors(carColorsData);
+      } catch (error) {
+        //handle error
+      }
     };
     getCarOptions();
   }, []);
 
   useEffect(() => {
     const getCarData = async () => {
-      const cars = await carApi.getCarsByParams(type, model, color);
-      setCarsData(cars);
+      try {
+        const cars = await carApi.getCarsByParams(type, model, color);
+        setCarsData(cars);
+      } catch (error) {
+        //handle error
+      }
     };
     getCarData();
   }, [type, model, color]);
@@ -38,54 +48,33 @@ function Home() {
     callback(e.target.value);
   };
   return (
-    <div>
+    <div className="layout">
       <h2>Cars Store</h2>
-      <form style={{ marginBottom: '24px' }}>
+      <form className="form">
         {carTypes.length && (
-          <div>
-            <label htmlFor="carType" style={{ width: '80px', display: 'inline-block' }}>
-              Type
-            </label>
-            <select id="carType" value={type} placeholder="Select car type" onChange={onChangeSelect(setType)}>
-              {carTypes.map((type, index) => (
-                <option value={type} key={index}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CustomSelect label="Type" id="carType" value={type} onChange={onChangeSelect(setType)} options={carTypes} />
         )}
         {carModels.length && (
-          <div>
-            <label htmlFor="carModel" style={{ width: '80px', display: 'inline-block' }}>
-              Model
-            </label>
-            <select id="carModel" value={model} placeholder="Select car model" onChange={onChangeSelect(setModel)}>
-              {carModels.map((model, index) => (
-                <option value={model} key={index}>
-                  {model}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CustomSelect
+            label="Model"
+            id="carModel"
+            value={model}
+            onChange={onChangeSelect(setModel)}
+            options={carModels}
+          />
         )}
         {carColors.length && (
-          <div>
-            <label htmlFor="carColor" style={{ width: '80px', display: 'inline-block' }}>
-              Color
-            </label>
-            <select id="carColor" value={color} placeholder="Select car color" onChange={onChangeSelect(setColor)}>
-              {carColors.map((color, index) => (
-                <option value={color} key={index}>
-                  {color}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CustomSelect
+            label="Color"
+            id="carColor"
+            value={color}
+            onChange={onChangeSelect(setColor)}
+            options={carColors}
+          />
         )}
       </form>
       {!!carsData.length && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', columnGap: '32px', rowGap: '32px' }}>
+        <div className="container">
           {carsData.map(({ type, model, color, model_year }, index) => (
             <Car key={index} type={type} model={model} color={color} model_year={model_year} />
           ))}
